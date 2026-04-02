@@ -7,7 +7,22 @@ import fetch from 'node-fetch';
 dotenv.config();
 
 const fastify = Fastify({ logger: true });
+
 await fastify.register(websocket);
+
+// Add content type parser for Twilio's form data
+fastify.addContentTypeParser('application/x-www-form-urlencoded', { parseAs: 'string' }, function (req, body, done) {
+  try {
+    const parsed = new URLSearchParams(body);
+    const result = {};
+    for (const [key, value] of parsed) {
+      result[key] = value;
+    }
+    done(null, result);
+  } catch (err) {
+    done(err, undefined);
+  }
+});
 
 // Config
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
@@ -63,6 +78,7 @@ fastify.get('/voice/stream', { websocket: true }, (connection, req) => {
         if (transcript) {
           console.log(`🗣️ User: ${transcript}`);
           const response = await getAIResponse(transcript);
+          console.log(`🤖 Aurelia: ${response}`);
           await sendTTS(connection.socket, streamSid, response);
         }
       }
@@ -74,7 +90,7 @@ fastify.get('/voice/stream', { websocket: true }, (connection, req) => {
     if (data.event === 'start') {
       streamSid = data.start.streamSid;
       await connectDeepgram();
-      await sendTTS(connection.socket, streamSid, "I'm listening. How can I help?");
+      await sendTTS(connection.socket, streamSid, "I'm listening. What can I help you with today?");
     } else if (data.event === 'media' && deepgramWs?.readyState === WebSocket.OPEN) {
       deepgramWs.send(Buffer.from(data.media.payload, 'base64'));
     }
