@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: cw-voice-bridge
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: ELEVENLABS_API_KEY
+        sync: false
+      - key: ELEVENLABS_VOICE_ID
+        value: iP95p4xoKVk53GoZ742B
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: FROM_NUMBER
+        value: +18147783188
+      - key: OPENCLAW_GATEWAY_URL
+        sync: false
+      - key: PORT
+        value: 3334
+    healthCheckPath: /health
