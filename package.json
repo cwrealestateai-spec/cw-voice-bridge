@@ -1,0 +1,22 @@
+{
+  "name": "cw-voice-bridge",
+  "version": "1.0.0",
+  "description": "CW Real Estate Voice Call Bridge - Real-time AI phone conversations",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@openclaw/voice-call": "^2026.3.13",
+    "fastify": "^4.26.0",
+    "@fastify/websocket": "^8.2.0",
+    "ws": "^8.16.0",
+    "dotenv": "^16.4.0",
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
